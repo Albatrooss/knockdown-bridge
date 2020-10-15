@@ -1,0 +1,108 @@
+
+.link {
+    padding: 10px 20px;
+    background-color: rgb(233, 233, 162);
+    font-weight: 900;
+    color: rgb(92, 142, 189);
+    text-decoration: underline;
+    cursor: copy;
+    position: relative;
+}
+
+.copied {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100px;
+    animation: fadeout 1s ease forwards;
+    background-color: white;
+    padding: 10px;
+    border: 1px solid #333;
+}
+
+.lobby li button {
+    width: 24px;
+    height: 24px;
+    margin-left: 10px;
+    border: none;
+    border-radius: 3px;
+    background-color: rgb(228, 40, 40);
+    transform: translateY(-5px);
+    border: 2px solid rgb(228, 40, 40);
+
+    transition: all 400ms ease;
+}
+
+.lobby li button:hover {
+    background-color: white;
+    cursor: pointer;
+}
+
+.lobby li button:hover .x{
+    background-color: rgb(228, 40, 40);
+}
+
+.lobby .x {
+    position: absolute;
+    top: 7px;
+    left: 0;
+    width: 20px;
+    height: 5px;
+    transform: rotate(45deg);
+    border-radius: 10px;
+    background-color: white;
+
+    transition: all 400ms ease;
+}
+.lobby .x:last-child {
+    transform: rotate(-45deg);
+
+}
+
+.lobby .form-wrapper form {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.lobby .form-wrapper .input-wrapper {
+    width: 75%;
+}
+
+.lobby .form-wrapper button {
+    width: 20%;
+    height: 50px;
+
+    border: 2px solid forestgreen;
+    background-color: forestgreen;
+    color: white;
+    font-size: 2em;
+    font-weight: 600;
+    border-radius: 4px;
+    transition: all 300ms ease-in-out;
+}
+
+.lobby .form-wrapper button:hover {
+    cursor: pointer;
+    background-color: white;
+    color: forestgreen;
+}
+
+/* ================================================================================================================
+            ANIMATIONS
+================================================================================================================ */
+
+
+@keyframes fadeout {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 1;
+        display: block;
+    }
+    100% {
+        opacity: 0;
+        display: none;
+    }
+}

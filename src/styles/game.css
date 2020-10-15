@@ -1,0 +1,14 @@
+.game {
+    width: 100vw;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.table {
+    background-color: burlywood;
+    width: 95%;
+    max-width: 800px;
+    height: 97vh;
+}
