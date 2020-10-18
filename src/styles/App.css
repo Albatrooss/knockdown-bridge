@@ -1,5 +1,17 @@
+*,*::before,*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+
+  --white: #f2f2f2;
+  --black: #020202;
+  --red: rgb(231, 56, 56);
+  --grey: ---#777
+}
+
 .err {
-  color: rgb(231, 56, 56);
+  color: var(--red);
   font-size: 1.2em;
   font-weight: bolder;
 }

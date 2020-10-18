@@ -25,7 +25,7 @@ export default function Lobby({ history }) {
   const joinLobby = async e => {
     try {
       e.preventDefault();
-      if (users.length > 3) {
+      if (users.length > 9) {
         setErrMsg('Lobby Full..');
         return;
       }
@@ -34,7 +34,10 @@ export default function Lobby({ history }) {
       } else {
         await dbRef.doc(username).set({
           hand: [],
-          points: [],
+          lead: false,
+          tricks: 0,
+          bet: '?',
+          points: 0,
           host: users.find(u => u.host) ? false : true
         });
         tokenService.setTokenFromUser({ username, lobby: id })
@@ -62,9 +65,16 @@ export default function Lobby({ history }) {
 
   const startGame = async () => {
     try {
+      let order = shuffle(users.map(u => u.id));
+      let seats = order;
+      let deck = logic.deck;
+      let userHands = users.map(u => u.hand);
+      users.forEach((u, i) => {
+        userHands[i].push(deck.pop())
+      })
       await Promise.all([
-        dbRef.doc('logic').update({ order: shuffle(users.map(u => u.id)) }),
-        dealFirstRound()
+        ...userHands.map((u, i) => dbRef.doc(users[i].id).update({ hand: u, lead: order[0] === users[i].id ? true : false })),
+        dbRef.doc('logic').update({ deck, order, gameOn: true, seats }),
       ])
     } catch (err) {
       console.log(err);
@@ -72,17 +82,6 @@ export default function Lobby({ history }) {
     }
   }
 
-  const dealFirstRound = async () => {
-    let deck = logic.deck;
-    let userHands = users.map(u => u.hand);
-    users.forEach((u, i) => {
-      userHands[i].push(deck.pop())
-    })
-    await Promise.all([
-      ...userHands.map((u, i) => dbRef.doc(users[i].id).update({ hand: u })),
-      dbRef.doc('logic').update({ deck, order: users.map(u => u.id), gameOn: true }),
-    ])
-  }
 
   const goHome = () => {
     tokenService.removeToken();
@@ -101,7 +100,7 @@ export default function Lobby({ history }) {
   }
 
   const usersList = [];
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < 10; i++) {
     usersList.push(
       users[i] ? <li >
         {i + 1}.<span>{users[i].id} {users[i].host ? '(host)' : ''}</span>

@@ -17,6 +17,7 @@ function App() {
         <Route exact path='/' component={Home} />
         <Route path='/:id/lobby' render={({ history }) => <Lobby history={history} />} />
         <Route path='/:id/game' render={({ history }) => <Game history={history} />} />
+        <Route path='/*' render={({ history }) => <><h1>404 Page Not Found</h1><button onClick={() => history.push('/')}>Home</button></>} />
       </Switch>
     </BrowserRouter>
   );

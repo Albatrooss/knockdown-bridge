@@ -35,16 +35,21 @@ export default function Home({ history }) {
       lName = lobbyName === '' ? randomName : lobbyName;
       await db.collection(lName).doc(username).set({
         hand: [],
+        host: true,
+        lead: false,
+        tricks: 0,
+        bet: '?',
         points: 0,
-        host: true
       });
       await db.collection(lName).doc('logic').set({
         deck: shuffle(starterDeck),
         trump: 0,
-        order: ['clubs', 'diamonds', 'hearts', 'spades', 'no trump'],
+        order: [],
         numOfCards: 1,
         goingUp: true,
-        order: [username]
+        order: [username],
+        played: [],
+        dealer: 0
       });
       let list = await db.collection('lobbyList').get();
       console.log(list.docs[0].data())

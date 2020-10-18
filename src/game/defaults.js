@@ -53,7 +53,52 @@ const starterDeck = [
   's02',
 ]
 
+const gridTemplates = [
+  null,
+  '". . . . ." ". c c c ." "o0 c c c ." ". c c c ." "me me me me me"',
+  '". . o1 . ." ". c c c ." "o0 c c c ." ". c c c ." "me me me me me"',
+  '". . o1 . ." ". c c c ." "o0 c c c o2" ". c c c ." "me me me me me"',
+  '". . o2 . ." "o1 c c c ." ". c c c o3" "o0 c c c ." "me me me me me"',
+  '". o2 . o3 ." "o1 c c c ." ". c c c o4" "o0 c c c ." "me me me me me"',
+  '". o2 . o3 ." "o1 c c c o4" ". c c c ." "o0 c c c o5" "me me me me me"',
+  '". o3 . o4 ." "o2 c c c o5" "o1 c c c ." "o0 c c c o6" "me me me me me"',
+  '". o3 o4 o5 ." "o2 c c c o6" "o1 c c c ." "o0 c c c o7" "me me me me me"',
+  '". o3 o4 o5 ." "o2 c c c o6" "o1 c c c o7" "o0 c c c o8" "me me me me me"',
+]
+
+const playTemplates = [
+  null,
+  '". . . . . . ." ". . . p0 . . ." ". . . . . . ." ". . . . . . ." ". . . . . . ." ". . . me . . ." ". . . . . . ."',
+  '". . . . . . ." ". . . p1 . . ." ". . . . . . ." ". p0 . . . . ." ". . . . . . ." ". . . me . . ." ". . . . . . ."',
+  '". . . . . . ." ". . . p1 . . ." ". . . . . . ." ". p0 . . . p2 ." ". . . . . . ." ". . . me . . ." ". . . . . . ."',
+  '". . . . . . ." ". . . p2 . . ." ". p1 . . . . ." ". . . . . p3 ." ". p0 . . . . ." ". . . me . . ." ". . . . . . ."',
+  '". . . . . . ." ". . p2 . p3 . ." ". p1 . . . . ." ". . . . . p4 ." ". p0 . . . . ." ". . . me . . ." ". . . . . . ."',
+  '". . . . . . ." ". . p2 . p3 . ." ". p1 . . . p4 ." ". . . . . . ." ". p0 . . . p5 ." ". . . me . . ." ". . . . . . ."',
+  '". . . . . . ." ". . p3 . p4 . ." ". p2 . . . p5 ." ". p1 . . . . ." ". p0 . . . p6 ." ". . . me . . ." ". . . . . . ."',
+  '". . . . . . ." ". . p3 p4 p5 . ." ". p2 . . . p6 ." ". p1 . . . . ." ". p0 . . . p7 ." ". . . me . . ." ". . . . . . ."',
+]
+
+const seatPositions = [
+  [],
+  [4],
+  [1, 4],
+  [1, 4, 7],
+  [0, 2, 4, 7],
+  [0, 2, 3, 5, 7],
+  [0, 2, 3, 5, 6, 8],
+  [0, 1, 2, 3, 5, 6, 8],
+  [0, 1, 2, 3, 4, 5, 6, 8],
+  [0, 1, 2, 3, 4, 5, 6, 7, 8],
+]
+
+const trumpOrder = [
+  'clubs', 'diamonds', 'hearts', 'spades', 'no trump'
+]
 
 module.exports = {
-  starterDeck
+  starterDeck,
+  gridTemplates,
+  playTemplates,
+  trumpOrder,
+  seatPositions
 }

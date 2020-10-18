@@ -1,0 +1,147 @@
+.other {
+    border: 1px solid black;
+    overflow: hidden;
+    position: relative;
+
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: 15% 60% 25%;
+    grid-template-areas: 
+    "u u u u"
+    "h h h h"
+    "d t b p";
+}
+
+.other h4 {
+    grid-area: u;
+    text-align: center;
+}
+
+.other h4 span {
+    font-size: .9em;
+    color: #333;
+}
+
+.other-tricks,
+.other-bet,
+.other-points {
+    position: absolute;
+    bottom: 5px;
+    font-weight: bolder;
+}
+
+.other-tricks {
+    grid-area: t;
+    font-size: 0.8em;
+    color: #333;
+    bottom: 0;
+    left: -5px;
+    display: flex;
+    align-items: center;
+}
+
+.trick-bg {
+    width: 20px;
+    height: 26px;
+}
+
+.tricks-o {
+    position: absolute;
+    left: auto;
+    font-size: 1em;
+    left: 2px;
+    bottom: 5px;
+    display: block;
+    width: 20px;
+    color: var(--white);
+}
+
+.other-points {
+    grid-area: p;
+    font-size: 3em;
+    bottom: -5px;
+    right: 5px;
+}
+
+.other-points span {
+    color: #333;
+    font-size: .4em;
+    margin-right: 5px;
+}
+
+.dealer {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    border: 2px solid var(--white);
+    color: var(--white);
+    background-color: #333;
+    font-size: 20px;
+    font-weight: bolder;
+    display: flex;
+    justify-content: center;
+    
+    grid-area: d;
+    position: absolute;
+    left: 5px;
+    bottom: 5px;
+}
+
+.other-hand {
+    display: flex;
+    justify-content: center;
+    flex-wrap: no-wrap;
+    grid-area: h;
+    list-style: none;
+    padding: 0 3px;
+}
+
+.other-card-wrapper {
+    overflow: hidden;
+    max-width: 10px;
+}
+
+.other-card-wrapper:last-child {
+    overflow: visible;
+    max-width: 50px;
+}
+
+/* ==========================================================================================
+OTHER AREA
+========================================================================================== */
+            
+.card.back.small {
+    margin: 0;
+    /* height: 40px */
+}
+.o0 {
+    grid-area: o0;
+}
+.o1 {
+    grid-area: o1;
+}
+.o2 {
+    grid-area: o2;
+}
+.o3 {
+    grid-area: o3;
+}
+.o4 {
+    grid-area: o4;
+}
+.o5 {
+    grid-area: o5;
+}
+.o6 {
+    grid-area: o6;
+}
+.o7 {
+    grid-area: o7;
+}
+.o8 {
+    grid-area: o8;
+}
+
+.glowing {
+    box-shadow: 0 0 3px black;
+}

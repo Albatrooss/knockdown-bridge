@@ -2,6 +2,7 @@
     width: 100vw;
     min-height: 100vh;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
@@ -10,5 +11,143 @@
     background-color: burlywood;
     width: 95%;
     max-width: 800px;
-    height: 97vh;
+    height: 800px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: 1fr 1fr 1fr 1fr 30%;
+    grid-template-areas: 
+    ". o3 o4 o5 ."
+    "o2 c c c o6"
+    "o1 c c c o7"
+    "o0 c c c o8"
+    "me me me me me";
+}
+
+/* ==========================================================================================
+                PLAY AREA
+========================================================================================== */
+
+.play-area {
+    position: relative;
+    background-color: forestgreen;
+    grid-area: c;
+
+    display: grid;
+    grid-template-columns: 20% 1fr 1fr 1fr 1fr 1fr 20%;
+    grid-template-rows: 20% 1fr 1fr 1fr 1fr 1fr 20%;
+    grid-template-areas: 
+    ". . . . . . ."
+    ". . p3 p4 p5 . ."
+    ". p2 . . . p6 ."
+    ". p1 . . . p7 ."
+    ". p0 . . . p8 ."
+    ". . . me . . ."
+    ". . . . . . . ";
+}
+
+.trump {
+    position: absolute;
+    top: 0;
+    right: 0;
+    text-transform: capitalize;
+    padding: 5px;
+    color: var(--white);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.trump h3:first-child {
+    font-size: 1.4em;
+}
+
+.trump img {
+    width: 50px;
+}
+
+.p0,
+.p1,
+.p2,
+.p3,
+.p4,
+.p5,
+.p6,
+.p7,
+.p8,
+.my-card {
+    position: relative;
+}
+
+.p1 .card,
+.p3 .card,
+.p5 .card,
+.p6 .card,
+.p8 .card,
+.p0 .card,
+.p2 .card,
+.p4 .card,
+.p7 .card,
+.my-card .card {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.p0 > div.card {
+    transform: rotate(75deg);
+}
+.p1 > div.card {
+    transform: translateX(-10px) rotate(90deg);
+}
+.p2 > div.card {
+    transform: rotate(105deg);
+}
+.p3 > div.card {
+    transform: rotate(-15deg);
+}
+.p4 > div.card {
+    transform: translateY(-10px);
+}
+.p5 > div.card {
+    transform: rotate(15deg);
+}
+.p6 > div.card {
+    transform: rotate(75deg);
+}
+.p7 > div.card {
+    transform: translateX(10px) rotate(90deg);
+}
+.p8 > div.card {
+    transform: rotate(105deg);
+}
+
+.p0 {
+    grid-area: p0;
+}
+.p1 {
+    grid-area: p1;
+}
+.p2 {
+    grid-area: p2;
+}
+.p3 {
+    grid-area: p3;
+}
+.p4 {
+    grid-area: p4;
+}
+.p5 {
+    grid-area: p5;
+}
+.p6 {
+    grid-area: p6;
+}
+.p7 {
+    grid-area: p7;
+}
+.p8 {
+    grid-area: p8;
+}
+.my-card {
+    grid-area: me
 }

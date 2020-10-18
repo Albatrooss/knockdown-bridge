@@ -1,0 +1,150 @@
+
+/* ==========================================================================================
+               USER AREA
+========================================================================================== */
+
+
+.user-ui {
+    grid-area: me;
+    border: 1px solid black;
+
+    display: grid;
+    grid-template-columns: 70% 30%;
+    grid-template-rows: 10% 90%;
+    grid-template-areas: 
+    "title ui"
+    "cards ui";
+
+    position: relative;
+}
+
+.user-ui h2 {
+    grid-area: title;
+    text-align: center;
+    font-size: 1.7em;
+    font-weight: bold;
+}
+
+.user-ui h2 span {
+    font-size: .8em;
+    color: #333;
+}
+
+.user-hand {
+    grid-area: cards;
+    padding: 10px;
+    list-style: none;
+    display: flex;
+    justify-content: center;
+}
+
+.user-hand li {
+    /* overflow: hidden; */
+    width: 52px;
+    padding-top: 10px;
+    /* display: flex; */
+    /* align-items: center; */
+}
+
+.user-hand li:last-child {
+    overflow: visible;
+}
+
+.user-ui .card {
+    margin: 0;
+}
+.user-ui .user-hand .card:hover {
+    transform: translateY(-5px);
+}
+
+
+/* ==========================================================================================
+               POINTS AREA
+========================================================================================== */
+
+.user-options {
+    grid-area: ui;
+    position: relative;
+}
+
+.points-etc .points {
+    position: absolute;
+    bottom: -10px;
+    right: 10px;
+
+    font-size: 7em;
+    font-weight: bolder;
+}
+
+.points-etc .points span {
+    font-size: .3em;
+    color: #333;
+    margin-right: 10px;
+}
+
+.my-tricks {
+    list-style: none;
+    display: flex;
+    /* flex-direction: row-reverse;
+    justify-content: flex-start; */
+    padding: 5px 15px;
+}
+
+.my-tricks li {
+    width: 15px;
+    position: relative;
+}
+
+.my-tricks li div {
+    position: relative;
+    width: 30px;
+    height: 38px;
+}
+
+.my-tricks li p {
+    position: absolute;
+    z-index: 27;
+    left: 8px;
+    top: 3px;
+
+    font-size: 1.7em;
+    font-weight: bold;
+    color: var(--white);
+}
+
+.user-dealer {
+    position: absolute;
+    bottom: 5px;
+    background-color: #333;
+    border-radius: 10px;
+}
+
+.user-dealer:hover .card:first-child,
+.user-dealer:hover p {
+    transform: translateY(-7px);
+}
+
+.user-dealer .card:first-child {
+    position: absolute;
+    bottom: 5px;
+}
+
+.user-dealer p {
+    position: absolute;
+    top: 50%;
+    margin-top: -15px;
+    width: 100%;
+    height: 30px;
+    text-align: center;
+
+    color: var(--black);
+    font-size: 2em;
+    font-weight: bolder;
+    pointer-events: none;
+
+    transition: all 250ms ease;
+}
+
+.card {
+    transition: all 250ms ease;
+}
