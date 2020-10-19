@@ -8,6 +8,8 @@
 }
 
 .table {
+    position: relative;
+
     background-color: burlywood;
     width: 95%;
     max-width: 800px;
@@ -22,6 +24,7 @@
     "o0 c c c o8"
     "me me me me me";
 }
+
 
 /* ==========================================================================================
                 PLAY AREA
@@ -43,6 +46,10 @@
     ". p0 . . . p8 ."
     ". . . me . . ."
     ". . . . . . . ";
+}
+
+.pushed {
+    animation: push 500ms ease forwards;
 }
 
 .trump {
@@ -91,6 +98,7 @@
     position: absolute;
     top: 0;
     left: 0;
+    cursor: pointer;
 }
 
 .p0 > div.card {
@@ -150,4 +158,90 @@
 }
 .my-card {
     grid-area: me
+}
+
+@keyframes push {
+    50% {
+        grid-template-columns: 20% 1fr 1fr 1fr 1fr 1fr 20%;
+        grid-template-rows: 20% 1fr 1fr 1fr 1fr 1fr 20%;
+    }
+    55% {
+        grid-template-columns: 22% 1fr 1fr 1fr 1fr 1fr 22%;
+        grid-template-rows: 22% 1fr 1fr 1fr 1fr 1fr 22%;
+    }
+    62% {
+        grid-template-columns: 25% 1fr 1fr 1fr 1fr 1fr 25%;
+        grid-template-rows: 25% 1fr 1fr 1fr 1fr 1fr 25%;
+    }
+    75% {
+        grid-template-columns: 30% 1fr 1fr 1fr 1fr 1fr 30%;
+        grid-template-rows: 30% 1fr 1fr 1fr 1fr 1fr 30%;
+    }
+    88% {
+        grid-template-columns: 35% 1fr 1fr 1fr 1fr 1fr 35%;
+        grid-template-rows: 35% 1fr 1fr 1fr 1fr 1fr 35%;
+    }
+    95%{
+        grid-template-columns: 38% 1fr 1fr 1fr 1fr 1fr 38%;
+        grid-template-rows: 38% 1fr 1fr 1fr 1fr 1fr 38%;
+    }
+    100%{
+        grid-template-columns: 40% 1fr 1fr 1fr 1fr 1fr 40%;
+        grid-template-rows: 40% 1fr 1fr 1fr 1fr 1fr 40%;
+    }
+}
+
+/* ========================================================================================================
+        END GAME
+ ======================================================================================================== */
+
+.end-screen {
+    position: absolute;
+    width: 90%;
+    height: 90%;
+    margin-left: -45%;
+    /* margin-top: -45%; */
+
+    left: 50%;
+    top: 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 1px solid black;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.end-screen h2 {
+    text-align: center;
+    margin: 25px;
+    font-size: 3em;
+}
+
+.end-screen ul {
+    list-style: none;
+    width: 60%;
+    background-color: var(--white);
+    padding: 10px;
+}
+
+.end-screen ul li {
+    border-bottom: 1px solid forestgreen;
+    display: flex;
+    height: 2.5em;
+}
+
+.end-screen ul p {
+    font-size: 1.6em;
+    flex: 1;
+}
+
+.end-screen ul p:last-child {
+    text-align: right;
+}
+
+.end-screen ul span {
+    flex: 1;
+    text-align: center;
+    font-size: 1.8em;
 }

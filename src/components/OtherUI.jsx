@@ -1,7 +1,7 @@
 import React from 'react'
 import '../styles/other-ui.css';
 
-export default function OtherUI({ user, pos, turn, lead, dealer }) {
+export default function OtherUI({ user, pos, turn, dealer, lead }) {
   return (
     <div className={`other o${pos} ${turn ? 'glowing' : ''}`}>
       <h4>{user.id}<span>{lead ? ' - Lead' : ''}</span></h4>

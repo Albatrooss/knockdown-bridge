@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import '../styles/user-ui.css';
 import PlayedCard from './PlayedCard';
 
-export default function UserUI({ user, turnToBet, placeBet, lead, dealer, deal, playCard, sortCards }) {
+export default function UserUI({ user, leadSuit, turnToBet, placeBet, lead, dealer, nextDealer, roundOver, deal, playCard, sortCards }) {
 
   const [bet, setBet] = useState(0);
 
@@ -25,16 +25,41 @@ export default function UserUI({ user, turnToBet, placeBet, lead, dealer, deal, 
     <div className="user-ui">
       <h2>{user.id}{lead ? <span> - Lead</span> : <></>}</h2>
       <ul className="user-hand">
-        {user.hand.map((c, i) => user.bet === '?' ? <li key={c} style={{ zIndex: i }} onClick={() => sortCards(i)}><div className={`card large ${c}`} /></li> : <li key={c} onClick={() => playCard(i)}><div className={`card large ${c}`} /></li>)}
+        {user.hand.map((c, i) => {
+          let followSuitOp = true;
+          if (leadSuit) {
+
+          }
+          return user.bet === '?' ?
+            (i === user.hand.length - 1 ? <li key={c} style={{ zIndex: i }} onClick={() => sortCards(i)}>
+              <div className={`card large ${c}`} />
+            </li> :
+              <li key={c} style={{ zIndex: i, maxWidth: `calc(calc(100% - 104px) / ${user.hand.length})` }} onClick={() => sortCards(i)}>
+                <div className={`card large ${c}`} />
+              </li>) :
+            (i === user.hand.length - 1 ? <li key={c} style={{ zIndex: i, opacity: followSuitOp ? 1 : 0.8 }} onClick={() => playCard(i)}>
+              <div className={`card large ${c}`} />
+            </li> :
+              <li key={c} style={{ zIndex: i, maxWidth: `calc(calc(100% - 104px) / ${user.hand.length})`, opacity: followSuitOp ? 1 : 0.8 }} onClick={() => playCard(i)}>
+                <div className={`card large ${c}`} />
+              </li>)
+        })}
       </ul>
       <div className="user-options">
         {user.bet === '?' ? (turnToBet ? <div className="bet">
-          <h3>{bet}</h3>
-          <button onClick={incBet}>+</button>
-          <button onClick={decBet}>-</button>
-          <button onClick={() => placeBet(bet)}>Place Bet</button>
-        </div> : <div className="user-options">
+          <div className="bet-ctrl">
+            <div>
+              <button onClick={decBet}>-</button>
+              <h3>{bet}</h3>
+              <button onClick={incBet}>+</button>
+
+            </div>
+            <button onClick={() => placeBet(bet)}>Place Bet</button>
+          </div>
+          <div className="small-points">{user.points}</div>
+        </div> : <div className="bet">
             <h3>Waiting to Place Bet..</h3>
+            <div className="small-points">{user.points}</div>
           </div>) : <div className="points-etc">
             <ul className="my-tricks">
               {myTricks}
@@ -42,7 +67,8 @@ export default function UserUI({ user, turnToBet, placeBet, lead, dealer, deal, 
             <div className="tricks-won"></div>
             <div className="points"><span>{user.bet}</span>{user.points}</div>
           </div>}
-        {dealer && <div className="user-dealer" onClick={deal}><div className="card back large" /><div className="card back large" /><p>Deal</p></div>}
+        {nextDealer && roundOver && <div className="user-dealer" onClick={deal}><div className="card back large" /><div className="card back large" /><p>Deal</p></div>}
+        {dealer && <div className="user-dealer-symbol">D</div>}
       </div>
     </div >
   )

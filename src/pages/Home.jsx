@@ -44,12 +44,13 @@ export default function Home({ history }) {
       await db.collection(lName).doc('logic').set({
         deck: shuffle(starterDeck),
         trump: 0,
-        order: [],
         numOfCards: 1,
         goingUp: true,
-        order: [username],
+        seats: [username],
         played: [],
-        dealer: 0
+        dealer: 0,
+        leader: 1,
+        gameOver: false
       });
       let list = await db.collection('lobbyList').get();
       console.log(list.docs[0].data())
@@ -62,13 +63,13 @@ export default function Home({ history }) {
   useEffect(() => {
     let user = tokenService.getUserFromToken();
     if (user) {
-      console.log(user);
       history.push(`/${user.lobby}/lobby`)
     } else {
-      console.log('No user..')
+      setErrMsg(localStorage.getItem('message'))
+      localStorage.removeItem('message')
     }
 
-  })
+  }, [])
 
   return (
     <section className="home">

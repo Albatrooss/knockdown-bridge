@@ -1,3 +1,5 @@
+
+
 const shuffle = arr => {
   let current = arr.length, temp, random;
 
@@ -36,10 +38,80 @@ const dealOneCardEach = (users = [{ hand: [] }], deck = []) => {
   return { newUsers: users, newDeck: deck }
 }
 
+const trumps = ['c', 'd', 'h', 's', 'n'];
+
+const wonTrick = (played, trump) => {
+  let leadSuit = played[0].card[0];
+  let pointsArr = played.map(cu => {
+    let point;
+    let c = cu.card;
+    switch (c[c.length - 1]) {
+      case 'A':
+        point = 13;
+        break;
+      case 'K':
+        point = 12;
+        break;
+      case 'Q':
+        point = 11;
+        break;
+      case 'J':
+        point = 10;
+        break;
+      case '0':
+        point = 9;
+        break;
+      case '9':
+        point = 8;
+        break;
+      case '8':
+        point = 7;
+        break;
+      case '7':
+        point = 6;
+        break;
+      case '6':
+        point = 5;
+        break;
+      case '5':
+        point = 4;
+        break;
+      case '4':
+        point = 3;
+        break;
+      case '3':
+        point = 2;
+        break;
+      case '2':
+        point = 1;
+        break;
+    }
+    if (c[0] === trumps[trump]) {
+      point += 15;
+    } else if (c[0] !== leadSuit) {
+      point = 0;
+    }
+    return point;
+  })
+  let winningIndex = pointsArr.indexOf(Math.max(...pointsArr));
+  return played[winningIndex].user;
+}
+
+const followSuit = (hand, lead, index) => {
+  if (!lead) return true
+  let suitHand = hand.map(c => c[0]);
+  if (suitHand.includes(lead.card[0])) {
+    return suitHand[index] === lead.card[0] ? true : false
+  }
+  return true
+}
+
 module.exports = {
   shuffle,
   sortOrder,
-  dealOneCardEach
+  dealOneCardEach,
+  wonTrick,
+  followSuit
 }
 
 // let us = [{ hand: [] }, { hand: [] }];
@@ -49,3 +121,7 @@ module.exports = {
 // { newUsers = us, newDeck = deck } = dealOneCardEach(us, deck);
 // console.log("us: ", us);
 // console.log(sortOrder('adam', [{ id: 'tim', hand: [] }, { id: 'caitlin', hand: [] }, { id: 'andrew', hand: [] }, { id: 'adam', hand: [] }, { id: 'kyla', hand: [] }, { id: 'hannah', hand: [] }], ['caitlin', 'hannah', 'andrew', 'adam', 'tim', 'kyla']))
+
+// console.log(wonTrick([{ card: 'h06', user: 'Caitlin' }, { card: 'h07', user: 'Tim' }], 4));
+
+// console.log(followSuit(['cA', 'dA'], 's', 0))

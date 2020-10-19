@@ -40,14 +40,13 @@
 
 .user-hand li {
     /* overflow: hidden; */
-    width: 52px;
+    max-width: 104px;
     padding-top: 10px;
-    /* display: flex; */
-    /* align-items: center; */
 }
 
 .user-hand li:last-child {
     overflow: visible;
+    width: 104px;
 }
 
 .user-ui .card {
@@ -65,9 +64,11 @@
 .user-options {
     grid-area: ui;
     position: relative;
+    
 }
 
-.points-etc .points {
+.points-etc .points,
+.small-points {
     position: absolute;
     bottom: -10px;
     right: 10px;
@@ -147,4 +148,77 @@
 
 .card {
     transition: all 250ms ease;
+}
+
+.user-dealer-symbol {
+    position: absolute;
+    bottom: 5px;
+    width: 60px;
+    height: 60px;
+    border: 2px solid var(--white);
+    border-radius: 50%;
+    background-color: #333;
+    color: var(--white);
+    font-size: 2.8em;
+    font-weight: bolder;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ==========================================================================================
+               BET AREA
+========================================================================================== */
+
+
+.bet {
+    width: 100%;
+    height: 100%;
+    padding: 20px 35px 0 0;
+
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+}
+
+.bet-ctrl div {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    font-size: 2em;
+    font-weight: bold;
+}
+
+.bet-ctrl div h3 {
+    margin: 0 5px;
+}
+
+.bet-ctrl div button:hover,
+.bet-ctrl div button:active,
+.bet-ctrl div button:focus,
+.bet-ctrl > button:hover,
+.bet-ctrl > button:active,
+.bet-ctrl > button:focus {
+    outline: none;
+    background-color: rgb(66, 177, 66);
+    cursor: pointer;
+}
+
+.bet-ctrl button {
+    width: 25px;
+    height: 20px;
+    
+    background-color: forestgreen;
+    border: none;
+    color: var(--white);
+    border-radius: 3px;
+
+    transition: all 300ms ease;
+}
+
+.bet-ctrl > button {
+    margin-top: 10px;
+    width: 100%;
+    height: 30px;
 }

@@ -20,7 +20,7 @@ export default function Lobby({ history }) {
   const [logic, setLogic] = useState({ order: [] });
   const [host, setHost] = useState(false);
 
-  let userToken = tokenService.getUserFromToken();
+  const [userToken, setUserToken] = useState(tokenService.getUserFromToken());
 
   const joinLobby = async e => {
     try {
@@ -34,13 +34,13 @@ export default function Lobby({ history }) {
       } else {
         await dbRef.doc(username).set({
           hand: [],
-          lead: false,
           tricks: 0,
           bet: '?',
           points: 0,
           host: users.find(u => u.host) ? false : true
         });
         tokenService.setTokenFromUser({ username, lobby: id })
+        setUserToken(tokenService.getUserFromToken());
         setUsername('');
       }
     } catch (err) {
@@ -65,16 +65,15 @@ export default function Lobby({ history }) {
 
   const startGame = async () => {
     try {
-      let order = shuffle(users.map(u => u.id));
-      let seats = order;
+      let seats = shuffle(users.map(u => u.id));
       let deck = logic.deck;
       let userHands = users.map(u => u.hand);
       users.forEach((u, i) => {
         userHands[i].push(deck.pop())
       })
       await Promise.all([
-        ...userHands.map((u, i) => dbRef.doc(users[i].id).update({ hand: u, lead: order[0] === users[i].id ? true : false })),
-        dbRef.doc('logic').update({ deck, order, gameOn: true, seats }),
+        ...userHands.map((u, i) => dbRef.doc(users[i].id).update({ hand: u })),
+        dbRef.doc('logic').update({ deck, gameOn: true, seats }),
       ])
     } catch (err) {
       console.log(err);
@@ -114,49 +113,38 @@ export default function Lobby({ history }) {
   ================================================================================================================ */
 
   useEffect(() => {
-    const myToken = userToken;
-    const check = async () => {
-      try {
-        let c = await dbRef.get();
-        if (c.docs.length < 1) {
-          localStorage.setItem('message', 'Lobby not found..');
-          history.push('/');
-        }
-        // setLoading(false);
-        return true;
-      } catch (err) {
-        console.log(err);
-        setErrMsg(err.message);
-      }
-    }
     const unsubscribe = dbRef.onSnapshot(snap => {
+      const myToken = tokenService.getUserFromToken();
       try {
         const userList = snap.docs.map(doc => ({
           id: doc.id,
           ...doc.data()
         }));
-        if (userList.find(x => x.gameOn)) {
+        if (userList.length < 1) {
+          localStorage.setItem('message', 'Lobby not found..');
+          history.push('/');
+        } else if (userList.find(x => x.gameOn)) {
           if (myToken.lobby === id) {
             history.push(`/${id}/game`);
           } else {
             localStorage.setItem('message', 'Game allready started without you..');
             history.push('/');
           }
-        } else {
-          let usersList = [];
-          userList.forEach(u => {
-            if (u.id !== 'logic') {
-              if (u.host) {
-                usersList.unshift(u);
-              } else {
-                usersList.push(u);
-              }
-            } else {
-              setLogic(u);
-            }
-          })
-          setUsers(usersList);
         }
+        let usersList = [];
+        userList.forEach(u => {
+          if (u.id !== 'logic') {
+            if (u.host) {
+              usersList.unshift(u);
+            } else {
+              usersList.push(u);
+            }
+          } else {
+            setLogic(u);
+          }
+        })
+        setUsers(usersList);
+
         console.log(myToken);
         if (myToken) {
           let host = userList.find(x => x.host);
@@ -168,7 +156,6 @@ export default function Lobby({ history }) {
         setErrMsg(err.message);
       }
     })
-    check();
     return () => { unsubscribe() }
   }, [id, history])
 
