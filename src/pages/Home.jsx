@@ -31,7 +31,14 @@ export default function Home({ history }) {
       check = await db.collection(lobbyName).get();
     }
     if (check.docs.length > 0) {
-      setErrMsg('Lobby taken, please choose another name..');
+      let foundLogic = check.docs.map(doc => ({ ...doc.data(), id: doc.id })).find(x => x.id === 'logic');
+      if (foundLogic.gameOn) {
+        setErrMsg('Lobby taken, please choose another name..');
+        return;
+      } else {
+        history.push(`/${lobbyName}/lobby`);
+        return;
+      }
     } else {
       lName = lobbyName === '' ? randomName : lobbyName;
       await db.collection(lName).doc(username).set({
@@ -77,7 +84,6 @@ export default function Home({ history }) {
 
   return (
     <section className="home">
-      <h1>Knockdown Bridge</h1>
       <p>Welcome to Knockdown Bridge! Fill out the form below to create a lobby, then send the link created to you friends to invite them to play! Create a custom lobby name, or leave it blank for a randomly generated name.</p>
       {errMsg && <p className="err">{errMsg}</p>}
       <div className="form-wrapper">
@@ -91,7 +97,7 @@ export default function Home({ history }) {
             <label htmlFor="username" className={`label ${username ? 'filled' : ''}`}><span>Username</span></label>
           </div>
           <div className="select-btn">
-            <button type="submit" >Create Lobby</button>
+            <button type="submit" >Go to Lobby</button>
           </div>
         </form>
       </div>
@@ -106,4 +112,4 @@ function randomLobbyName() {
     res += options[Math.floor(Math.random() * options.length)]
   }
   return res;
-}
+} 

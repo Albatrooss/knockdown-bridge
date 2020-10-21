@@ -1,6 +1,6 @@
 
 
-const shuffle = arr => {
+export const shuffle = arr => {
   let current = arr.length, temp, random;
 
   while (current !== 0) {
@@ -14,7 +14,7 @@ const shuffle = arr => {
   return arr
 }
 
-const sortOrder = (me, arr, order) => {
+export const sortOrder = (me, arr, order) => {
   let filled = order.map(x => arr.find(y => y.id === x))
   let found = false;
   order.forEach(o => {
@@ -30,7 +30,7 @@ const sortOrder = (me, arr, order) => {
   return filled
 }
 
-const dealOneCardEach = (users = [{ hand: [] }], deck = []) => {
+export const dealOneCardEach = (users = [{ hand: [] }], deck = []) => {
   users.forEach(user => {
     let hand = user.hand;
     hand.push(deck.pop());
@@ -40,7 +40,7 @@ const dealOneCardEach = (users = [{ hand: [] }], deck = []) => {
 
 const trumps = ['c', 'd', 'h', 's', 'n'];
 
-const wonTrick = (played, trump) => {
+export const wonTrick = (played, trump) => {
   let leadSuit = played[0].card[0];
   let pointsArr = played.map(cu => {
     let point;
@@ -97,7 +97,7 @@ const wonTrick = (played, trump) => {
   return played[winningIndex].user;
 }
 
-const followSuit = (hand, lead, index) => {
+export const followSuit = (hand, lead, index) => {
   if (!lead) return true
   let suitHand = hand.map(c => c[0]);
   if (suitHand.includes(lead.card[0])) {
@@ -118,12 +118,3 @@ const followSuit = (hand, lead, index) => {
 // console.log(wonTrick([{ card: 'h06', user: 'Caitlin' }, { card: 'h07', user: 'Tim' }], 4));
 
 // console.log(followSuit(['cA', 'dA'], 's', 0))
-
-export default {
-  shuffle,
-  sortOrder,
-  dealOneCardEach,
-  wonTrick,
-  followSuit
-}
-

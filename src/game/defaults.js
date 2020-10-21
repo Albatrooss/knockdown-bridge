@@ -1,4 +1,4 @@
-const starterDeck = [
+export const starterDeck = [
   'dA',
   'dK',
   'dQ',
@@ -78,7 +78,7 @@ const playTemplates = [
   '". . . . . . ." ". . p3 p4 p5 . ." ". p2 . . . p6 ." ". p1 . . . . ." ". p0 . . . p7 ." ". . . me . . ." ". . . . . . ."',
 ]
 
-const seatPositions = [
+export const seatPositions = [
   [],
   [4],
   [1, 4],
@@ -91,7 +91,7 @@ const seatPositions = [
   [0, 1, 2, 3, 4, 5, 6, 7, 8],
 ]
 
-const trumpOrder = [
+export const trumpOrder = [
   'clubs', 'diamonds', 'hearts', 'spades', 'no trump'
 ]
 
