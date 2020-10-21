@@ -106,13 +106,6 @@ const followSuit = (hand, lead, index) => {
   return true
 }
 
-module.exports = {
-  shuffle,
-  sortOrder,
-  dealOneCardEach,
-  wonTrick,
-  followSuit
-}
 
 // let us = [{ hand: [] }, { hand: [] }];
 // let deck = ['s02', 'sA', 'sK', 'dA', 'dK'];
@@ -125,3 +118,12 @@ module.exports = {
 // console.log(wonTrick([{ card: 'h06', user: 'Caitlin' }, { card: 'h07', user: 'Tim' }], 4));
 
 // console.log(followSuit(['cA', 'dA'], 's', 0))
+
+export default {
+  shuffle,
+  sortOrder,
+  dealOneCardEach,
+  wonTrick,
+  followSuit
+}
+

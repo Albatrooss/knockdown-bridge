@@ -95,7 +95,7 @@ const trumpOrder = [
   'clubs', 'diamonds', 'hearts', 'spades', 'no trump'
 ]
 
-module.exports = {
+export default {
   starterDeck,
   gridTemplates,
   playTemplates,
