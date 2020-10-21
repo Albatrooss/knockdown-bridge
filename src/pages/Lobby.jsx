@@ -19,6 +19,7 @@ export default function Lobby({ history }) {
   const [users, setUsers] = useState([]);
   const [logic, setLogic] = useState({ order: [] });
   const [host, setHost] = useState(false);
+  const [editUpTo, setEditUpTo] = useState(0);
 
   const [userToken, setUserToken] = useState(tokenService.getUserFromToken());
 
@@ -32,13 +33,16 @@ export default function Lobby({ history }) {
       if (users.some(u => u.id === username)) {
         setErrMsg("Username allready taken..");
       } else {
-        await dbRef.doc(username).set({
+        await Promise.all([dbRef.doc(username).set({
           hand: [],
           tricks: 0,
           bet: '?',
           points: 0,
-          host: users.find(u => u.host) ? false : true
-        });
+          host: users.find(u => u.host) ? false : true,
+          wins: 0
+        }),
+        dbRef.doc('logic').update({ upTo: logic.upTo * (users.length + 1) > 52 ? Math.floor(52 / (users.length + 1)) : logic.upTo })
+        ]);
         tokenService.setTokenFromUser({ username, lobby: id })
         setUserToken(tokenService.getUserFromToken());
         setUsername('');
@@ -64,6 +68,7 @@ export default function Lobby({ history }) {
   }
 
   const startGame = async () => {
+    if (users.length < 2) return setErrMsg('Not enough players..');
     try {
       let seats = shuffle(users.map(u => u.id));
       let deck = logic.deck;
@@ -103,9 +108,18 @@ export default function Lobby({ history }) {
     usersList.push(
       users[i] ? <li >
         {i + 1}.<span>{users[i].id} {users[i].host ? '(host)' : ''}</span>
-        {userToken && userToken.username === users[i].id && <button onClick={() => leaveLobby(i)}><div className='x' /><div className='x' /></button>}
+        {userToken && userToken.username === users[i].id && <div className='button' onClick={() => leaveLobby(i)}><div className='x' /><div className='x' /></div>}
       </li> : <li className="blank-li">{i + 1}. --empty slot--</li>
     )
+  }
+
+  const handleEditUpTo = async e => {
+    e.preventDefault();
+
+    // Check if it can go up to this number
+    if (editUpTo > 52 || editUpTo * users.length > 52) return
+    await dbRef.doc('logic').update({ upTo: parseInt(editUpTo) })
+    setEditUpTo(0);
   }
 
   /* ================================================================================================================
@@ -134,6 +148,7 @@ export default function Lobby({ history }) {
         let usersList = [];
         userList.forEach(u => {
           if (u.id !== 'logic') {
+            if (u.id === '_history') return
             if (u.host) {
               usersList.unshift(u);
             } else {
@@ -145,7 +160,6 @@ export default function Lobby({ history }) {
         })
         setUsers(usersList);
 
-        console.log(myToken);
         if (myToken) {
           let host = userList.find(x => x.host);
           if (host && host.id === myToken.username) setHost(true);
@@ -196,8 +210,17 @@ export default function Lobby({ history }) {
           <button className="start-game-btn" onClick={startGame}>Start Game</button> :
           <>{userToken ? <p>Waiting for the host to start the game..</p> : ''}</>
         }
-        <button onClick={goHome}>Home</button><br />
-        {logic.deck.filter((x, i) => i < 5).map(card => <div className={`card ${card}`} >{card}</div>)}
+        <p className="go-home" onClick={goHome}>Home</p>
+        <table className="settings">
+          <tr>
+            <th>Up To:</th>
+            <td>{editUpTo > 0 ?
+              <form className="edit-upto" onSubmit={handleEditUpTo}>
+                <input type="number" value={editUpTo} onChange={e => setEditUpTo(e.target.value)} />
+                <input type="submit" value="Submit" />
+              </form> : <>{logic.upTo} {host && <p onClick={() => setEditUpTo(logic.upTo)}>Edit</p>}</>}</td>
+          </tr>
+        </table>
       </section>
     )
 }

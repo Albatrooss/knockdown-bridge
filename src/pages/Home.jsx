@@ -18,6 +18,7 @@ export default function Home({ history }) {
 
   const createLobby = async e => {
     e.preventDefault();
+    if (username[0] === '_') return setErrMsg('Invalid Username..');
     let check, randomName, lName;
     if (lobbyName === '') {
       randomName = randomLobbyName();
@@ -40,6 +41,7 @@ export default function Home({ history }) {
         tricks: 0,
         bet: '?',
         points: 0,
+        wins: 0
       });
       await db.collection(lName).doc('logic').set({
         deck: shuffle(starterDeck),
@@ -50,8 +52,10 @@ export default function Home({ history }) {
         played: [],
         dealer: 0,
         leader: 1,
-        gameOver: false
+        gameOver: false,
+        upTo: 52
       });
+      await db.collection(lName).doc('_history').set({ temp: 'temp' })
       let list = await db.collection('lobbyList').get();
       console.log(list.docs[0].data())
       await db.collection('lobbyList').doc('list').update({ list: [...list.docs[0].data().list, lName] });
@@ -91,7 +95,6 @@ export default function Home({ history }) {
           </div>
         </form>
       </div>
-      <button onClick={() => tokenService.setTokenFromUser({ user: 'Tim', lobby: 'jkgfj' })}>TEST</button>
     </section>
   )
 }

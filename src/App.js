@@ -5,6 +5,7 @@ import './styles/components/forms.css';
 
 import tokenService from './utils/tokenService';
 
+import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Game from './pages/Game';
 import Lobby from './pages/Lobby';
@@ -13,6 +14,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <Navbar />
       <Switch>
         <Route exact path='/' component={Home} />
         <Route path='/:id/lobby' render={({ history }) => <Lobby history={history} />} />

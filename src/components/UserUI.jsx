@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import '../styles/user-ui.css';
 import PlayedCard from './PlayedCard';
 
-export default function UserUI({ user, leadSuit, turnToBet, placeBet, lead, dealer, nextDealer, roundOver, deal, playCard, sortCards }) {
+export default function UserUI({ user, leadSuit, turnToBet, placeBet, lead, dealer, nextDealer, roundOver, deal, playCard, sortCards, turn }) {
 
   const [bet, setBet] = useState(0);
 
@@ -24,6 +24,7 @@ export default function UserUI({ user, leadSuit, turnToBet, placeBet, lead, deal
   return (
     <div className="user-ui">
       <h2>{user.id}{lead ? <span> - Lead</span> : <></>}</h2>
+      {turn && user.hand.length > 0 && <h3 className="your-turn">Your Turn!</h3>}
       <ul className="user-hand">
         {user.hand.map((c, i) => {
           let followSuitOp = true;
@@ -49,12 +50,14 @@ export default function UserUI({ user, leadSuit, turnToBet, placeBet, lead, deal
         {user.bet === '?' ? (turnToBet ? <div className="bet">
           <div className="bet-ctrl">
             <div>
-              <button onClick={decBet}>-</button>
+              <h4 onClick={decBet}>-</h4>
               <h3>{bet}</h3>
-              <button onClick={incBet}>+</button>
-
+              <h4 onClick={incBet}>+</h4>
             </div>
-            <button onClick={() => placeBet(bet)}>Place Bet</button>
+            <button onClick={() => {
+              placeBet(bet);
+              setBet(0);
+            }}>Place Bet</button>
           </div>
           <div className="small-points">{user.points}</div>
         </div> : <div className="bet">

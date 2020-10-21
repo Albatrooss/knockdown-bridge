@@ -1,3 +1,21 @@
+.lobby {
+    width: 100vw;
+    height: calc(100vh - 60px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.writing {
+    width: 60%;
+    text-align: center;
+    margin: 20px;
+}
+
+.writing h2,
+.writing p {
+    margin: 15px;
+}
 
 .link {
     padding: 10px 20px;
@@ -20,26 +38,55 @@
     border: 1px solid #333;
 }
 
-.lobby li button {
+.lobby .user-list {
+    width: 60%;
+    border: 2px solid #333;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.lobby .user-list h4 {
+    text-align: center;
+}
+
+.lobby .user-list ul {
+    list-style: none;
+    width: 100%;
+}
+
+.lobby .user-list ul li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+    border-bottom: 1px solid forestgreen
+}
+
+.lobby .user-list ul li span {
+    flex: 1;
+    /* text-align: left; */
+}
+
+.lobby li .button {
+    position: relative;
+    display: block;
     width: 24px;
     height: 24px;
     margin-left: 10px;
-    border: none;
     border-radius: 3px;
-    background-color: rgb(228, 40, 40);
-    transform: translateY(-5px);
-    border: 2px solid rgb(228, 40, 40);
+    background-color: var(--red);
+    border: 2px solid var(--red);
 
     transition: all 400ms ease;
 }
 
-.lobby li button:hover {
+.lobby li .button:hover {
     background-color: white;
     cursor: pointer;
 }
 
-.lobby li button:hover .x{
-    background-color: rgb(228, 40, 40);
+.lobby li .button:hover .x{
+    background-color: var(--red);
 }
 
 .lobby .x {
@@ -86,6 +133,70 @@
     cursor: pointer;
     background-color: white;
     color: forestgreen;
+}
+
+.start-game-btn:hover {
+    background-color: var(--white);
+    color: #333;
+    cursor: pointer;
+}
+
+.start-game-btn {
+    background-color: #333;
+    color: var(--white);
+    padding: 15px 25px;
+    border: 2px solid #333;
+    border-radius: 3px;;
+    margin: 10px;
+
+    font-size: 1.3em;
+    font-weight: bold;
+
+    transition: all 300ms ease;
+}
+
+.go-home:hover {
+    text-decoration: underline;
+    color: #ccc;
+    cursor: pointer;
+}
+
+.go-home {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 2em;
+    color: var(--white);
+}
+
+.lobby tr {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.lobby th {
+    margin-right: 10px;
+}
+
+.lobby td {
+    display: flex;
+    font-size: 1.3em;
+    align-items: center;
+}
+
+.lobby td p:hover {
+    text-decoration: underline;
+}
+
+.lobby td p {
+    margin-left: 10px;
+    font-size: .8em;
+    cursor: pointer;
+}
+
+form.edit-upto input {
+    width: 50px;
 }
 
 /* ================================================================================================================

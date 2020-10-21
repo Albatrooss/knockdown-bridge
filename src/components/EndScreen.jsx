@@ -48,7 +48,7 @@ export default function EndScreen({ users, newGame, host }) {
           </li>)
         })}
       </ul>
-      {host && <button onClick={newGame}>New GAME</button>}
+      {host && <button onClick={newGame} className='new-game-btn'>New GAME</button>}
     </div>
   )
 }

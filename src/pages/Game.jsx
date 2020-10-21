@@ -10,6 +10,7 @@ import OtherUI from '../components/OtherUI';
 import UserUI from '../components/UserUI';
 import PlayedCard from '../components/PlayedCard';
 import EndScreen from '../components/EndScreen';
+import Scoreboard from '../components/Scoreboard';
 
 import { trumpOrder, seatPositions, starterDeck } from '../game/defaults';
 import { shuffle, sortOrder, dealOneCardEach, wonTrick, followSuit } from '../utils/randomFunctions';
@@ -22,6 +23,8 @@ export default function Game({ history }) {
   const [user, setUser] = useState({ hand: [], points: 0, turn: false });
   const [users, setUsers] = useState([]);
   const [logic, setLogic] = useState({ deck: [], played: [], trump: 0, order: [], seats: [] });
+  const [gameHistory, setGameHistory] = useState({});
+  const [showScoreboard, setShowScoreboard] = useState(false);
 
   const [push, setPush] = useState(false);
 
@@ -39,7 +42,7 @@ export default function Game({ history }) {
 
     if (goingUp) {
       numOfCards++;
-      if (numOfCards * (users.length + 1) > 52) {
+      if (numOfCards * (users.length + 1) > 52 || numOfCards > logic.upTo) {
         console.log('here')
         goingUp = false;
         numOfCards = numOfCards - 2;
@@ -61,19 +64,17 @@ export default function Game({ history }) {
     //Clear table
     let played = [];
 
-    // //  Change order + dealer + leader
-    // let order = logic.order;
-    // let temp = order.shift()
-    // order.push(temp);
-
     let dealer = (logic.dealer + 1) % logic.seats.length;
     let leader = (dealer + 1) % logic.seats.length;
+
+    //Add to gameHistory
+    let handHistory = [{ round: logic.numOfCards + trumpOrder[logic.trump][0].toUpperCase() }];
 
     let all = [...users, user];
     // Calculate points
     all = all.map(u => {
       let points = u.bet > 0 ? 10 + u.bet : 5;
-
+      handHistory.push({ user: u.id, bet: u.bet, points: u.bet === u.tricks ? u.points + points : u.points });
       if (u.bet === u.tricks) {
         return { ...u, points: u.points + points }
       }
@@ -100,8 +101,9 @@ export default function Game({ history }) {
           delete u.id;
           return dbRef.doc(id).update(u)
         }),
-        dbRef.doc('logic').update({ numOfCards, /*order, */trump, deck, goingUp, played, dealer, leader })
+        dbRef.doc('logic').update({ numOfCards, /*order, */trump, deck, goingUp, played, dealer, leader }),
       ])
+      if (logic.numOfCards > 0) await dbRef.doc('_history').update({ ['round' + Object.keys(gameHistory).length]: handHistory })
     } catch (err) {
       catchErr(err);
     }
@@ -111,7 +113,6 @@ export default function Game({ history }) {
     let all = [...users, user];
 
     //Check you are following suit
-    console.log(followSuit(user.hand, logic.played[0], index));
     if (!followSuit(user.hand, logic.played[0], index)) return
 
     // Check if everyone made their bets || you have allready played this round || you turn
@@ -139,7 +140,7 @@ export default function Game({ history }) {
         dbRef.doc(user.id).update({ tricks: user.tricks + 1 }),
         dbRef.doc('logic').update({ played: [], leader })
       ])
-      if (!logic.goingUp && logic.numOfCards === 1 && user.hand.length < 1) endGame();
+      if (!logic.goingUp && logic.numOfCards === 1 && user.hand.length < 1) endGame(user.id);
     } catch (err) {
       catchErr(err);
     }
@@ -221,15 +222,32 @@ export default function Game({ history }) {
   //      END ROUND
   // ===========================================================================================
 
-  const endGame = () => {
-    dbRef.doc('logic').update({ gameOver: true })
-  }
+  const endGame = async (userId) => {
+    let handHistory = [{ round: logic.numOfCards + trumpOrder[logic.trump][0].toUpperCase() }];
 
+    let all = [...users, user];
+    all.find(u => u.id === userId).tricks += 1;
+    // Calculate points
+    all = all.map(u => {
+      let points = u.bet > 0 ? 10 + u.bet : 5;
+      handHistory.push({ user: u.id, bet: u.bet, points: u.bet === u.tricks ? u.points + points : u.points });
+      if (u.bet === u.tricks) {
+        return { ...u, points: u.points + points }
+      }
+      return u
+    })
+    await Promise.all([
+      ...all.map(u => dbRef.doc(u.id).update({ points: u.points })),
+      dbRef.doc('logic').update({ gameOver: true }),
+      dbRef.doc('_history').update({ ['round' + Object.keys(gameHistory).length]: handHistory })
+    ])
+  }
   const newGame = async () => {
     try {
       Promise.all([
-        ...[...users, user].map(u => dbRef.doc(u.id).set({ host: u.host, hand: [], points: 0, bet: '?', tricks: 0 })),
-        dbRef.doc('logic').set({ deck: starterDeck, goingUp: true, numOfCards: 0, dealer: 0, leader: 2 % logic.seats, played: [], gameOn: true, gameOver: false, seats: logic.seats, trump: 0 })
+        ...[...users, user].map(u => dbRef.doc(u.id).set({ host: u.host, hand: [], points: 0, bet: '?', tricks: 0, wins: [...users, user].sort((a, b) => b.points - a.points)[0].id === u.id ? u.wins + 1 : u.wins })),
+        dbRef.doc('logic').set({ upTo: logic.upTo, deck: starterDeck, goingUp: true, numOfCards: 0, dealer: 0, leader: 2 % logic.seats, played: [], gameOn: true, gameOver: false, seats: logic.seats, trump: 4 }),
+        dbRef.doc('_history').set({ temp: 'temp' })
       ])
     } catch (err) {
       catchErr(err);
@@ -248,10 +266,13 @@ export default function Game({ history }) {
         id: doc.id,
         ...doc.data()
       }));
-      let logicData, usersData = [], userData = {};
+      let logicData, usersData = [], userData = {}, gameHistoryData = {};
       connectedData.forEach(data => {
         if (data.id === 'logic') {
           logicData = data;
+        } else if (data.id === '_history') {
+          gameHistoryData = data;
+          delete gameHistoryData.id;
         } else if (data.id === userToken.username) {
           userData = data;
           usersData.push(data);
@@ -261,6 +282,7 @@ export default function Game({ history }) {
         userData.hand && setUser(userData);
         logicData && setLogic(logicData);
         logicData && logicData.seats && setUsers(sortOrder(userData.id, usersData, logicData.seats));
+        setGameHistory(gameHistoryData)
       })
     })
     return () => unsubscribe();
@@ -293,6 +315,7 @@ export default function Game({ history }) {
           leadSuit={logic.played[0] ? logic.played[0].card[0] : undefined}
           lead={logic.seats[logic.leader] === user.id}
           dealer={logic.seats[logic.dealer] === user.id}
+          turn={logic.seats[(logic.leader + logic.played.length) % logic.seats.length] === user.id}
           nextDealer={logic.seats[(logic.dealer + 1) % logic.seats.length] === user.id}
           roundOver={[...users, user].every(u => u.hand.length < 1)}
           deal={dealNewRound}
@@ -301,11 +324,13 @@ export default function Game({ history }) {
           turnToBet={logic.seats[(logic.leader + [...users, user].filter(u => u.bet !== '?').length) % logic.seats.length] === user.id}
           placeBet={placeBet}
         />
+        <div className="buttons">
+          <button className="scoreboard-btn" onClick={() => setShowScoreboard(prev => !prev)}>Scoreboard</button>
+          <button className="home-btn" onClick={leaveGame}>Leave</button>
+        </div>
       </div>
       {logic.gameOver && <EndScreen newGame={newGame} users={[...users, user]} host={user.host} />}
-      <button onClick={() => dealNewRound(2)}>Round 2</button>
-      <button onClick={leaveGame}>Home</button>
-      <button onClick={() => setPush(!push)}>PUSH</button>
+      {showScoreboard && <Scoreboard gameHistory={gameHistory} minimize={() => setShowScoreboard(false)} users={[...users, user]} />}
     </section>
   )
 }
