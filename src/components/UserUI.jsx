@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import '../styles/user-ui.css';
 import PlayedCard from './PlayedCard';
 
-export default function UserUI({ user, leadSuit, turnToBet, placeBet, lead, dealer, nextDealer, roundOver, deal, playCard, sortCards, turn }) {
+export default function UserUI({ user, leadSuit, betting, placeBet, lead, dealer, nextDealer, roundOver, deal, playCard, sortCards, turn, numOfCards }) {
 
   const [bet, setBet] = useState(0);
 
@@ -47,32 +47,35 @@ export default function UserUI({ user, leadSuit, turnToBet, placeBet, lead, deal
         })}
       </ul>
       <div className="user-options">
-        {user.bet === '?' ? (turnToBet ? <div className="bet">
-          <div className="bet-ctrl">
-            <div>
-              <h4 onClick={decBet}>-</h4>
-              <h3>{bet}</h3>
-              <h4 onClick={incBet}>+</h4>
-            </div>
-            <button onClick={() => {
-              placeBet(bet);
-              setBet(0);
-            }}>Place Bet</button>
-          </div>
-          <div className="small-points">{user.points}</div>
-        </div> : <div className="bet">
-            <h3>Waiting to Place Bet..</h3>
-            <div className="small-points">{user.points}</div>
-          </div>) : <div className="points-etc">
-            <ul className="my-tricks">
-              {myTricks}
-            </ul>
-            <div className="tricks-won"></div>
-            <div className="points"><span>{user.bet}</span>{user.points}</div>
-          </div>}
+        {user.bet !== '?' ? <div className="points-etc">
+          <ul className="my-tricks">
+            {myTricks}
+          </ul>
+          <div className="tricks-won"></div>
+          <div className="points"><span>{user.bet}</span>{user.points}</div>
+        </div> : <></>}
         {nextDealer && roundOver && <div className="user-dealer" onClick={deal}><div className="card back large" /><div className="card back large" /><p>Deal</p></div>}
         {dealer && <div className="user-dealer-symbol">D</div>}
       </div>
+      {betting ? <>{turn ? <div className="bet">
+        <div className="bet-ctrl">
+          {dealer && <h2>Can't say {numOfCards}</h2>}
+          <div>
+            <h4 onClick={decBet}>-</h4>
+            <h3>{bet}</h3>
+            <h4 onClick={incBet}>+</h4>
+          </div>
+          <button onClick={() => {
+            placeBet(bet);
+            setBet(0);
+          }}>Place Bet</button>
+        </div>
+        <div className="small-points">{user.points}</div>
+      </div> : <div className="bet">
+          <h3>{user.bet === '?' ? 'Waiting to Place Bet..' : 'Waiting for the others to bet..'}</h3>
+          <div className="small-points">{user.points}</div>
+        </div>}</> : <></>
+      }
     </div >
   )
 }

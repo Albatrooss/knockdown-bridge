@@ -32,6 +32,10 @@ export default function Game({ history }) {
 
   const userToken = tokenService.getUserFromToken();
 
+  const myTurn = (
+    logic.seats[(logic.leader + logic.played.length) % logic.seats.length] === user.id && [...users, user].filter(u => u.bet === '?').length < 1) ||
+    logic.seats[(logic.leader + [...users, user].filter(u => u.bet !== '?').length) % logic.seats.length] === user.id && [...users, user].some(u => u.bet === '?');
+
   const dealNewRound = async num => {
 
     // Check all tricks have been claimed
@@ -312,23 +316,26 @@ export default function Game({ history }) {
         </div>
         <UserUI
           user={user}
+          totalBet={users.filter(u => u.bet !== '?').reduce((a, b) => a + b.bet, 0)}
           leadSuit={logic.played[0] ? logic.played[0].card[0] : undefined}
           lead={logic.seats[logic.leader] === user.id}
           dealer={logic.seats[logic.dealer] === user.id}
-          turn={logic.seats[(logic.leader + logic.played.length) % logic.seats.length] === user.id}
+          turn={myTurn}
           nextDealer={logic.seats[(logic.dealer + 1) % logic.seats.length] === user.id}
           roundOver={[...users, user].every(u => u.hand.length < 1)}
           deal={dealNewRound}
           playCard={playCard}
           sortCards={sortCards}
-          turnToBet={logic.seats[(logic.leader + [...users, user].filter(u => u.bet !== '?').length) % logic.seats.length] === user.id}
+          betting={[...users, user].filter(u => u.bet === '?').length > 0}
           placeBet={placeBet}
+          numOfCards={logic.numOfCards}
         />
         <div className="buttons">
           <button className="scoreboard-btn" onClick={() => setShowScoreboard(prev => !prev)}>Scoreboard</button>
           <button className="home-btn" onClick={leaveGame}>Leave</button>
         </div>
       </div>
+      <button onClick={() => tokenService.extendToken()}>EXTEND</button>
       {logic.gameOver && <EndScreen newGame={newGame} users={[...users, user]} host={user.host} />}
       {showScoreboard && <Scoreboard gameHistory={gameHistory} minimize={() => setShowScoreboard(false)} users={[...users, user]} />}
     </section>

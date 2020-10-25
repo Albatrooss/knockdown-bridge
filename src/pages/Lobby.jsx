@@ -129,6 +129,7 @@ export default function Lobby({ history }) {
   useEffect(() => {
     const unsubscribe = dbRef.onSnapshot(snap => {
       const myToken = tokenService.getUserFromToken();
+      if (myToken && myToken.lobby !== id) return tokenService.removeToken();
       try {
         const userList = snap.docs.map(doc => ({
           id: doc.id,

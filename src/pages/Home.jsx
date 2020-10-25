@@ -106,7 +106,7 @@ export default function Home({ history }) {
 }
 
 function randomLobbyName() {
-  let options = '1234567890!@#$^*()_+=qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM,'
+  let options = '1234567890-_qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM,'
   let res = '';
   for (let i = 0; i < 6; i++) {
     res += options[Math.floor(Math.random() * options.length)]
