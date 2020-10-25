@@ -132,6 +132,7 @@ export default function Game({ history }) {
     } catch (err) {
       catchErr(err);
     }
+    tokenService.extendToken();
   }
 
   const claimTrick = async () => {
@@ -335,7 +336,6 @@ export default function Game({ history }) {
           <button className="home-btn" onClick={leaveGame}>Leave</button>
         </div>
       </div>
-      <button onClick={() => tokenService.extendToken()}>EXTEND</button>
       {logic.gameOver && <EndScreen newGame={newGame} users={[...users, user]} host={user.host} />}
       {showScoreboard && <Scoreboard gameHistory={gameHistory} minimize={() => setShowScoreboard(false)} users={[...users, user]} />}
     </section>
