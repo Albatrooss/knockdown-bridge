@@ -11,7 +11,7 @@ export default function PlayedCard({ user, winning, users, card, lead, claimTric
   const pos = seatPos >= 0 ? 'p' + seatPos : 'my-card'
 
   return (
-    <div className={pos} style={{ zIndex: winning ? 30 : 'inherit' }} onClick={claimTrick}>
+    <div className={pos} style={{ zIndex: winning ? 25 : 'inherit' }} onClick={claimTrick}>
       <div className={`card ${card} ${lead ? '' : 'small'} shadow ${westSeats.includes(seatPos) ? 'west' : ''}`} />
     </div>
   )
