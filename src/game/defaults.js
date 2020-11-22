@@ -95,6 +95,16 @@ export const trumpOrder = [
   'clubs', 'diamonds', 'hearts', 'spades', 'no trump'
 ]
 
+export const defaultUser = { 
+  bet: '?',
+  hand: [],
+  host: false, 
+  points: 0, 
+  tricks: 0,
+  wins: 0,
+  turn: false, 
+}
+
 export default {
   starterDeck,
   gridTemplates,

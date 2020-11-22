@@ -12,7 +12,7 @@ import PlayedCard from '../components/PlayedCard';
 import EndScreen from '../components/EndScreen';
 import Scoreboard from '../components/Scoreboard';
 
-import { trumpOrder, seatPositions, starterDeck } from '../game/defaults';
+import { trumpOrder, seatPositions, starterDeck, defaultUser } from '../game/defaults';
 import { shuffle, sortOrder, dealOneCardEach, wonTrick, followSuit } from '../utils/randomFunctions';
 
 export default function Game({ history }) {
@@ -20,7 +20,7 @@ export default function Game({ history }) {
   const { id } = useParams();
   const dbRef = firebase.firestore().collection(id);
 
-  const [user, setUser] = useState({ hand: [], points: 0, turn: false });
+  const [user, setUser] = useState(defaultUser);
   const [users, setUsers] = useState([]);
   const [logic, setLogic] = useState({ deck: [], played: [], trump: 0, order: [], seats: [] });
   const [gameHistory, setGameHistory] = useState({});
@@ -32,9 +32,14 @@ export default function Game({ history }) {
 
   const userToken = tokenService.getUserFromToken();
 
+  console.log(user, users)
+
   const myTurn = (
-    logic.seats[(logic.leader + logic.played.length) % logic.seats.length] === user.id && [...users, user].filter(u => u.bet === '?').length < 1) ||
-    logic.seats[(logic.leader + [...users, user].filter(u => u.bet !== '?').length) % logic.seats.length] === user.id && [...users, user].some(u => u.bet === '?');
+    (logic.played.length !== users.length + 1 // your turn to play a card
+      && logic.seats[(logic.leader + logic.played.length) % logic.seats.length] === user.id 
+      && [...users, user].filter(u => u.bet === '?').length < 1)) 
+      || logic.seats[(logic.leader + [...users, user].filter(u => u.bet !== '?').length) % logic.seats.length]
+        === user.id && [...users, user].some(u => u.bet === '?'); //your turn to place a bet
 
   const dealNewRound = async num => {
 
@@ -272,7 +277,9 @@ export default function Game({ history }) {
         ...doc.data()
       }));
       let logicData, usersData = [], userData = {}, gameHistoryData = {};
+      console.log('connectedData: ', connectedData)
       connectedData.forEach(data => {
+        console.log('data: ', data)
         if (data.id === 'logic') {
           logicData = data;
         } else if (data.id === '_history') {
@@ -282,13 +289,14 @@ export default function Game({ history }) {
           userData = data;
           usersData.push(data);
         } else {
+          console.log('here')
           usersData.push(data);
         }
-        userData.hand && setUser(userData);
-        logicData && setLogic(logicData);
-        logicData && logicData.seats && setUsers(sortOrder(userData.id, usersData, logicData.seats));
-        setGameHistory(gameHistoryData)
       })
+      userData.hand && setUser(userData);
+      logicData && setLogic(logicData);
+      userData.id && logicData && logicData.seats && setUsers(sortOrder(userData.id, usersData, logicData.seats));
+      setGameHistory(gameHistoryData)
     })
     return () => unsubscribe();
   }, [id, history])
@@ -323,13 +331,15 @@ export default function Game({ history }) {
           dealer={logic.seats[logic.dealer] === user.id}
           turn={myTurn}
           nextDealer={logic.seats[(logic.dealer + 1) % logic.seats.length] === user.id}
-          roundOver={[...users, user].every(u => u.hand.length < 1)}
+          roundOver={users.every(u => u.handLength < 1) && user.hand.length < 1}
           deal={dealNewRound}
           playCard={playCard}
           sortCards={sortCards}
           betting={[...users, user].filter(u => u.bet === '?').length > 0}
           placeBet={placeBet}
           numOfCards={logic.numOfCards}
+          totalBets={[...users, user].reduce((total, u) => u.bet !== '?' ? total + u.bet : total, 0)}
+          whosBetting={logic.seats[(logic.leader + [...users, user].filter(u => u.bet !== '?').length) % logic.seats.length]}
         />
         <div className="buttons">
           <button className="scoreboard-btn" onClick={() => setShowScoreboard(prev => !prev)}>Scoreboard</button>

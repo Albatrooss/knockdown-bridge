@@ -1,6 +1,6 @@
 .game {
     width: 100vw;
-    min-height: calc(100vh - 60px);
+    height: calc(100vh - 100px);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -9,13 +9,13 @@
 
 .table {
     position: relative;
-
+    margin-top: 20px;
     background-color: burlywood;
     border: 4px solid rgb(173, 136, 86);
     border-radius: 3px;
     width: 95%;
-    max-width: 800px;
-    height: 800px;
+    max-width: 666px;
+    height: 666px;
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     grid-template-rows: 1fr 1fr 1fr 1fr 30%;

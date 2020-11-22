@@ -64,7 +64,6 @@ export default function Home({ history }) {
       });
       await db.collection(lName).doc('_history').set({ temp: 'temp' })
       let list = await db.collection('lobbyList').get();
-      console.log(list.docs[0].data())
       await db.collection('lobbyList').doc('list').update({ list: [...list.docs[0].data().list, lName] });
       tokenService.setTokenFromUser({ username: username, lobby: lName });
       history.push(`/${lName}/lobby`);

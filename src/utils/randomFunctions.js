@@ -15,7 +15,11 @@ export const shuffle = arr => {
 }
 
 export const sortOrder = (me, arr, order) => {
+  console.log('me: ', me)
+  console.log('arr: ', arr)
+  console.log('order: ', order)
   let filled = order.map(x => arr.find(y => y.id === x))
+  console.log('filled1: ', filled)
   let found = false;
   order.forEach(o => {
     if (!found) {
@@ -27,7 +31,16 @@ export const sortOrder = (me, arr, order) => {
       filled.push(temp);
     }
   })
-  return filled
+  console.log('filled2: ', filled)
+  return filled.map(u => ({
+    id: u.id,
+    bet: u.bet,
+    handLength: u.hand.length,
+    host: u.host,
+    points: u.points,
+    tricks: u.tricks,
+    wins: u.wins,
+  }))
 }
 
 export const dealOneCardEach = (users = [{ hand: [] }], deck = []) => {

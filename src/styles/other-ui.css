@@ -18,6 +18,7 @@
 .other h4 {
     grid-area: u;
     text-align: center;
+    text-transform: capitalize;
 }
 
 .other h4 span {
@@ -38,7 +39,7 @@
     font-size: 0.8em;
     color: #333;
     bottom: 0;
-    left: -5px;
+    left: 0px;
     display: flex;
     align-items: center;
 }
@@ -50,9 +51,8 @@
 
 .tricks-o {
     position: absolute;
-    left: auto;
     font-size: 1em;
-    left: 2px;
+    left: 7px;
     bottom: 5px;
     display: block;
     width: 20px;
@@ -61,9 +61,9 @@
 
 .other-points {
     grid-area: p;
-    font-size: 3em;
+    font-size: 2em;
     bottom: -5px;
-    right: 5px;
+    right: 0;
     display: flex;
     align-items: flex-end;
 }
@@ -71,7 +71,7 @@
 .other-points span {
     color: #333;
     font-size: .4em;
-    margin: 0 5px 10px 0;
+    margin: 0 2px 7px 0;
 }
 
 .dealer {
@@ -118,8 +118,7 @@ OTHER AREA
             
 .card.back.small {
     margin: 0;
-    height: 50px;
-    width: 37px;
+    font-size: 8px;
 }
 .o0 {
     grid-area: o0;
