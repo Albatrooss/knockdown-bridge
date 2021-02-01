@@ -178,6 +178,8 @@ export default function Lobby({ history }) {
             RETURN
   ================================================================================================================ */
 
+  const thisUrl = `https://knockdown-bridge.netlify.app/${id.replace(/\s/g, '%20')}/lobby`;
+
   return loading ? (
     <section className="lobby">
       LOADING...
@@ -187,7 +189,7 @@ export default function Lobby({ history }) {
         <div className="writing">
           <h2>Welcome to the Lobby!</h2>
           <p>Copy and paste this link to your friends to invite them to play!</p>
-          <span onClick={() => copyToClipboard(`https://knockdown-bridge.netlify.app//${id.replace(/\s/g, '%20')}/lobby`)} className="link">https://knockdown-bridge.netlify.app/lasagne/lobby/{id.replace(/\s/g, '%20')}/lobby{copied && <p className="copied">Copied!</p>}</span>
+          <span onClick={() => copyToClipboard(thisUrl)} className="link">{thisUrl}{copied && <p className="copied">Copied!</p>}</span>
         </div>
         {errMsg && <p className="err">{errMsg}</p>}
         <div className="user-list">

@@ -25,6 +25,7 @@ export default function Game({ history }) {
   const [logic, setLogic] = useState({ deck: [], played: [], trump: 0, order: [], seats: [] });
   const [gameHistory, setGameHistory] = useState({});
   const [showScoreboard, setShowScoreboard] = useState(false);
+  const [reneged, setReneged] = useState(null);
 
   const [push, setPush] = useState(false);
 
@@ -122,7 +123,11 @@ export default function Game({ history }) {
     let all = [...users, user];
 
     //Check you are following suit
-    if (!followSuit(user.hand, logic.played[0], index)) return
+    if (!followSuit(user.hand, logic.played[0], index)) {
+      setReneged(index);
+      setTimeout(() => setReneged(null), 1000);
+      return;
+    } 
 
     // Check if everyone made their bets || you have allready played this round || you turn
     if (all.some(u => u.bet === '?') || logic.played.some(c => c.user === user.id) || logic.seats[(logic.leader + logic.played.length) % logic.seats.length] !== user.id) return
@@ -301,6 +306,8 @@ export default function Game({ history }) {
     return () => unsubscribe();
   }, [id, history])
 
+  let totalBet = [user, ...users].filter(u => u.bet !== '?').reduce((a, b) => a + b.bet, 0);
+
   return (
     <section className="game">
       {errMsg && <p className="err">{errMsg}</p>}
@@ -325,7 +332,7 @@ export default function Game({ history }) {
         </div>
         <UserUI
           user={user}
-          totalBet={users.filter(u => u.bet !== '?').reduce((a, b) => a + b.bet, 0)}
+          totalBet={totalBet}
           leadSuit={logic.played[0] ? logic.played[0].card[0] : undefined}
           lead={logic.seats[logic.leader] === user.id}
           dealer={logic.seats[logic.dealer] === user.id}
@@ -340,6 +347,7 @@ export default function Game({ history }) {
           numOfCards={logic.numOfCards}
           totalBets={[...users, user].reduce((total, u) => u.bet !== '?' ? total + u.bet : total, 0)}
           whosBetting={logic.seats[(logic.leader + [...users, user].filter(u => u.bet !== '?').length) % logic.seats.length]}
+          reneged={reneged}
         />
         <div className="buttons">
           <button className="scoreboard-btn" onClick={() => setShowScoreboard(prev => !prev)}>Scoreboard</button>

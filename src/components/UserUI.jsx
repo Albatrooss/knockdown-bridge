@@ -2,7 +2,12 @@ import React, { useState } from 'react';
 import '../styles/user-ui.css';
 import PlayedCard from './PlayedCard';
 
-export default function UserUI({ user, leadSuit, betting, placeBet, lead, dealer, nextDealer, roundOver, deal, playCard, sortCards, turn, numOfCards, totalBets, whosBetting }) {
+export default function UserUI({ 
+  user, leadSuit, betting, placeBet, 
+  lead, dealer, nextDealer, roundOver, 
+  deal, playCard, sortCards, turn, numOfCards, 
+  totalBets, whosBetting, reneged 
+}) {
 
   const [bet, setBet] = useState(0);
 
@@ -22,8 +27,7 @@ export default function UserUI({ user, leadSuit, betting, placeBet, lead, dealer
   }
 
   const cantSay = numOfCards - totalBets;
-
-  console.log(nextDealer, roundOver)
+  const dealerMsg = cantSay >= 0 ? <h2>Can't say {cantSay}</h2> : <h2>You can say whatever you want!</h2>
 
   return (
     <div className="user-ui">
@@ -32,21 +36,23 @@ export default function UserUI({ user, leadSuit, betting, placeBet, lead, dealer
       <ul className="user-hand">
         {user.hand.map((c, i) => {
           let followSuitOp = true;
-          if (leadSuit) {
-
-          }
-          return user.bet === '?' ?
-            (i === user.hand.length - 1 ? <li key={c} style={{ zIndex: i }} onClick={() => sortCards(i)}>
-              <div className={`card large ${c}`} />
-            </li> :
-              <li key={c} style={{ zIndex: i, maxWidth: `calc(calc(100% - 104px) / ${user.hand.length})` }} onClick={() => sortCards(i)}>
+          return user.bet === '?' 
+          ?
+            (i === user.hand.length - 1 
+            ? <li key={c} style={{ zIndex: i }} onClick={() => sortCards(i)}>
                 <div className={`card large ${c}`} />
-              </li>) :
-            (i === user.hand.length - 1 ? <li key={c} style={{ zIndex: i, opacity: followSuitOp ? 1 : 0.8 }} onClick={() => playCard(i)}>
-              <div className={`card large ${c}`} />
-            </li> :
+              </li> 
+            : <li key={c} style={{ zIndex: i, maxWidth: `calc(calc(100% - 104px) / ${user.hand.length})` }} onClick={() => sortCards(i)}>
+                <div className={`card large ${c}`} />
+              </li>) 
+          :
+            (i === user.hand.length - 1 
+            ? <li key={c} style={{ zIndex: i, opacity: followSuitOp ? 1 : 0.8 }} onClick={() => playCard(i)}>
+                <div className={`card large ${c} ${reneged === i ? 'reneged' : ''}`} />
+              </li> 
+            :
               <li key={c} style={{ zIndex: i, maxWidth: `calc(calc(100% - 104px) / ${user.hand.length})`, opacity: followSuitOp ? 1 : 0.8 }} onClick={() => playCard(i)}>
-                <div className={`card large ${c}`} />
+                <div className={`card large ${c} ${reneged === i ? 'reneged' : ''}`} />
               </li>)
         })}
       </ul>
@@ -68,7 +74,7 @@ export default function UserUI({ user, leadSuit, betting, placeBet, lead, dealer
           {turn 
           ? <div className="bet">
               <div className="bet-ctrl">
-                {dealer && cantSay >= 0 && <h2>Can't say {cantSay}</h2>}
+                {dealer && dealerMsg}
                 <div>
                   <h4 onClick={decBet}>-</h4>
                   <h3>{bet}</h3>
@@ -82,7 +88,8 @@ export default function UserUI({ user, leadSuit, betting, placeBet, lead, dealer
               <div className="small-points">{user.points}</div>
             </div> 
           : <div className="bet">
-              <h3>Waiting for <span className='whos-betting'>{whosBetting}</span> to Place Bet..</h3>
+              <h3 className='text-center'>Waiting for <span className='whos-betting'>{whosBetting}</span> to Place Bet..<br /><br />
+              <span className='whos-betting'>{totalBets}</span> bet so far..</h3>
               <div className="small-points">{user.points}</div>
             </div>}
           </> 
